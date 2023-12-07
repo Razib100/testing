@@ -1,0 +1,18 @@
+"select /*parallel(64)*/ a.cod_cust||'~'||trim(b.cod_acct_no)||'~'||to_char(b.DAT_VALUE,'DDMMYYYY')||'~'||to_char((b.DAT_VALUE),'DDMMYYYY')||'~'||b.cod_drcr||'~'||b.AMT_TXN||'~'||
+                    b.TXT_TXN_DESC||'~'||b.COD_TXN_MNEMONIC||'~'||b.COD_TXN_LITERAL||'~'||a.cod_acct_no||to_char(b.dat_txn,'DD/Mon/YYYY hh:mi:ss')||b.ctr_updat_srlno||b.CTR_BATCH_NO||b.REF_SYS_TR_AUD_NO||b.REF_SUB_SEQ_NO||'~'||to_char(b.DAT_post,'DDMMYYYY')
+                    from fcrlive_1.ch_acct_mast a , fcrlive_1.ch_nobook b, fcrlive_1.ba_bank_mast c,fcrlive_1.st_clrreg d
+                    where a.COD_PROD in('869','819','219')
+                    and a.cod_acct_no = b.cod_acct_no and b.cod_txn_mnemonic = '6501'
+                    and a.cod_acct_no = d.cod_payee_acct
+                    and b.cod_acct_no = d.cod_payee_acct
+                    and b.ctr_batch_no = d.ctr_batch_no
+                    and b.ref_sys_tr_aud_no = d.ref_sys_tr_aud_no
+                    and b.ref_sub_seq_no = d.ref_sub_seq_no
+                    and d.cod_txn_mnemonic = '6501'
+                    and b.amt_txn= d.amt_txn_lcy
+                    and b.dat_value = d.dat_value_cust
+                    and substr(b.ref_chq_no,-6,6) = substr(d.ref_instr_no,-6,6)
+                    and d.cod_reject = 0
+                    and b.DAT_VALUE = c.dat_process
+                    and a.flg_mnt_status = 'A'
+                    and b.cod_drcr = 'C'"
